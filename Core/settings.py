@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-la^9=l&4f&+)%&!9wm$*c=ys*p4zsm(cjpt6!%8ga6#v)*mu=o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "SalerApp"
 ]
 
 MIDDLEWARE = [
