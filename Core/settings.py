@@ -24,12 +24,11 @@ SECRET_KEY = 'django-insecure-la^9=l&4f&+)%&!9wm$*c=ys*p4zsm(cjpt6!%8ga6#v)*mu=o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
+
 ALLOWED_HOSTS = ['*']
 
-=======
-ALLOWED_HOSTS = ["*"]
->>>>>>> 9ac4d40753c44a34794836b1ac5b3faed6b6c12b
+
+
 
 # Application definition
 
@@ -40,18 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
     'corsheaders',
     'rest_framework',
     'UserApp',
     'rest_framework_simplejwt',
-
-=======
-    'rest_framework',
     'drf_yasg',
     "SalerApp",
->>>>>>> 9ac4d40753c44a34794836b1ac5b3faed6b6c12b
-
+    "PaymentApp"
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -129,7 +123,23 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
+
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+SWAGGER_SETTINGS = {
+    "DEFAULT_GENERATOR_CLASS": "drf_yasg.generators.OpenAPISchemaGenerator",
+    # Other Swagger settings...
+}
 
 STATIC_URL = 'static/'
 
