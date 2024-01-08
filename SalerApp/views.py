@@ -29,7 +29,7 @@ def post(self, request):
     name = SalerRegister.objects.filter(login=username, password=password).first()
     return Response({"Login Success": name.id})
 
-
+#
 class SalerLogout(APIView):
     def get(self, request, pk):
         user = SalerRegister.objects.all().filter(id=pk).first()
