@@ -31,7 +31,7 @@ class Login(APIView):
         password = request.data.get('password')
         user = User.objects.all().filter(name=name, password=password)
         return Response({"Message": "Succes"})
-
+#
 
 class UpdateuserPassword(APIView):
     queryset = User.objects.all()
