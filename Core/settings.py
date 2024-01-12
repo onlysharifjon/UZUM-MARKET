@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     "SalerApp",
-    "PaymentApp"
+    "PaymentApp",
     'ProductAPP',
 ]
 REST_FRAMEWORK = {

@@ -42,7 +42,7 @@ class CategoryModel(models.Model):
     def __str__(self):
         return str(self.sub_category)
 
-
+from SalerApp.models import SalerRegister
 class ProductModel(models.Model):
     sub_category = models.ForeignKey(CategoryModel, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -50,5 +50,11 @@ class ProductModel(models.Model):
     photo2 = models.ImageField(upload_to='uploads/')
     photo3 = models.ImageField(upload_to='uploads/')
     price = models.IntegerField()
-    saler_name = models.ForeignKey
+    saler_name = models.ForeignKey(SalerRegister,on_delete=models.CASCADE)
+    color = models.CharField(max_length=255)
+    about = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name_plural = "Markdown content"
+    size = models.CharField(max_length=255)
+    count = models.IntegerField()
