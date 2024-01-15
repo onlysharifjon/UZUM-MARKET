@@ -24,11 +24,7 @@ SECRET_KEY = 'django-insecure-la^9=l&4f&+)%&!9wm$*c=ys*p4zsm(cjpt6!%8ga6#v)*mu=o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
 ALLOWED_HOSTS = ['*']
-
-
-
 
 # Application definition
 
@@ -51,7 +47,9 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
 }
 
 MIDDLEWARE = [
@@ -127,7 +125,6 @@ USE_TZ = True
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
-
 
 CORS_ALLOW_METHODS = [
     "DELETE",
