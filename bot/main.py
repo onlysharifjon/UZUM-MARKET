@@ -5,7 +5,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import CallbackQuery
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from keyboards.default import keyboard
-from keyboards.inline import Katalog1, Katalog2
+from keyboards.inline import Katalog1, Katalog2, kiyimlar
 import os
 from django.core.wsgi import get_wsgi_application
 
@@ -14,7 +14,7 @@ application = get_wsgi_application()
 # ------------------------DJANGO--------------------
 from ProductAPP.views import filtr_by_katalog
 
-API_TOKEN = '6029555538:AAGZVSM6OIOoomI92pIcy5Zm7tk4MtFR_Ys'
+API_TOKEN = '6586939529:AAF8J4lGLyO0LSCmpKHnBj14OkuvwgD76jc'
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN, parse_mode='HTML')
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -28,6 +28,15 @@ async def startt(message: types.Message):
 @dp.message_handler(text='Katalog')
 async def katalog(message: types.Message):
     await message.answer('KATALOG', reply_markup=Katalog1)
+
+
+@dp.callback_query_handler(text='Kiyim')
+async def kiyimlar_handler(call: types.CallbackQuery):
+    try:
+        await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                            reply_markup=kiyimlar)
+    except:
+        await call.answer('Boshqa menyu mavjud emas')
 
 
 @dp.callback_query_handler(text='oldinga')
