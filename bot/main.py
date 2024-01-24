@@ -7,12 +7,14 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from keyboards.default import keyboard
 from keyboards.inline import Katalog1, Katalog2
 import os
-from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Core.settings')
-application = get_wsgi_application()
-# ------------------------DJANGO--------------------
-from ProductAPP.views import filtr_by_katalog
+# ------------------------DATABASE--------------------
+import sqlite3
+
+connect = sqlite3.connect('C:/Users/momin/PycharmProjects/UZUM-MARKET/db.sqlite3', check_same_thread=False)
+cursor = connect.cursor()
+# ------------------------DATABASE--------------------
+
 
 API_TOKEN = '6029555538:AAGZVSM6OIOoomI92pIcy5Zm7tk4MtFR_Ys'
 logging.basicConfig(level=logging.INFO)
@@ -50,15 +52,27 @@ async def orqaga_inline(call: types.CallbackQuery):
 
 from channels.db import database_sync_to_async
 
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+
+@dp.callback_query_handler(text='orqaga_katalog')
+async def orqaga_kala(call: types.CallbackQuery):
+    await call.message.delete()
+    await call.message.answer('KATALOG', reply_markup=Katalog1)
+
 
 @dp.callback_query_handler()
 async def catalog_oladi(call: types.CallbackQuery):
-    print(call.data)
-    # categorylar = filtr_by_katalog(call.data)
-    # send callback data to django
-    categorylar = await database_sync_to_async(filtr_by_katalog)(call.data)
-    #get data from django
-
+    await call.message.delete()
+    filters = cursor.execute("SELECT category FROM ProductAPP_katalogmodel WHERE katalog = ?", (call.data,)).fetchall()
+    buttons_list = []
+    button = InlineKeyboardMarkup()
+    for i in filters:
+        buttons_list.append(i[0])
+    for d in buttons_list:
+        button.add(InlineKeyboardButton(text=d, callback_data=d))
+    button.add(InlineKeyboardButton(text='<<', callback_data="orqaga_katalog"))
+    await call.message.answer(f'{call.data}', reply_markup=button)
 
 
 if __name__ == '__main__':
