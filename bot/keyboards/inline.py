@@ -1,4 +1,5 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from connect import catalogs
 
 Katalog1 = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -93,3 +94,10 @@ Katalog2 = InlineKeyboardMarkup(
     ],
 
 )
+
+
+kiyimlar = InlineKeyboardMarkup()
+
+for catalog in catalogs:
+    kiyim = InlineKeyboardMarkup(text=catalog[2], callback_data=catalog[2].strip())
+    kiyimlar.add(kiyim)
