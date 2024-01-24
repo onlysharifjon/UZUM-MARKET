@@ -69,7 +69,7 @@ async def orqaga_kala(call: types.CallbackQuery):
     await call.message.delete()
     await call.message.answer('KATALOG', reply_markup=Katalog1)
 
-
+#
 @dp.callback_query_handler()
 async def catalog_oladi(call: types.CallbackQuery):
     await call.message.delete()
