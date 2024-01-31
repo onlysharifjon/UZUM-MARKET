@@ -83,7 +83,7 @@ async def catalog_oladi(call: types.CallbackQuery):
         button.add(InlineKeyboardButton(text=d, callback_data=d))
     button.add(InlineKeyboardButton(text='<<', callback_data="orqaga_katalog"))
     await call.message.answer(f'{call.data}', reply_markup=button)
-
+#
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
