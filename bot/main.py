@@ -11,12 +11,12 @@ import os
 # ------------------------DATABASE--------------------
 import sqlite3
 
-connect = sqlite3.connect('C:/Users/momin/PycharmProjects/UZUM-MARKET/db.sqlite3', check_same_thread=False)
+connect = sqlite3.connect('C:/Users/Пользователь/Desktop/begi/db.sqlite3', check_same_thread=False)
 cursor = connect.cursor()
 # ------------------------DATABASE--------------------
 
 
-API_TOKEN = '6586939529:AAF8J4lGLyO0LSCmpKHnBj14OkuvwgD76jc'
+API_TOKEN = '6437397866:AAEOOgdDBmyIY-hxth9TxrLh7DHZ7bgs-Qo'
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN, parse_mode='HTML')
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -68,6 +68,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 async def orqaga_kala(call: types.CallbackQuery):
     await call.message.delete()
     await call.message.answer('KATALOG', reply_markup=Katalog1)
+
 
 #
 @dp.callback_query_handler()
