@@ -1,27 +1,21 @@
 import logging
-from aiogram.dispatcher import FSMContext
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.types import CallbackQuery
-from aiogram.dispatcher.filters.state import State, StatesGroup
 from keyboards.default import keyboard
 from keyboards.inline import Katalog1, Katalog2, kiyimlar
 from states import CallbackStates
-import os
-
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 # ------------------------DATABASE--------------------
-import sqlite3
 
+import sqlite3
 connect = sqlite3.connect('C:/Users/momin/PycharmProjects/UZUM-MARKET/db.sqlite3', check_same_thread=False)
 cursor = connect.cursor()
+
 # ------------------------DATABASE--------------------
-
-
 API_TOKEN = '6437397866:AAEOOgdDBmyIY-hxth9TxrLh7DHZ7bgs-Qo'
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN, parse_mode='HTML')
 dp = Dispatcher(bot, storage=MemoryStorage())
-
 
 @dp.message_handler(commands="start")
 async def startt(message: types.Message):
@@ -58,11 +52,6 @@ async def orqaga_inline(call: types.CallbackQuery):
                                             reply_markup=Katalog1)
     except:
         await call.answer('Boshqa menyu mavjud emas')
-
-
-from channels.db import database_sync_to_async
-
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 @dp.callback_query_handler(text='orqaga_katalog')
@@ -104,8 +93,7 @@ async def sub_category(call: types.CallbackQuery):
     for i in mahsulotlar:
         inline_keyboard_mahsulotlar.add(InlineKeyboardButton(text=i[0], callback_data=i[0]))
     inline_keyboard_mahsulotlar.add(InlineKeyboardButton(text='<<', callback_data="orqaga_katalog"))
-    await call.message.answer(call.data,reply_markup=inline_keyboard_mahsulotlar)
-
+    await call.message.answer(call.data, reply_markup=inline_keyboard_mahsulotlar)
 
 
 if __name__ == '__main__':
