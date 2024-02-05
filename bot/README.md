@@ -17,6 +17,11 @@ source venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
+## Change API TOKEN 
+
+## Change path database 
+### 11line main.py change path database
+
 ## 4)
 ```commandline
 cd /bot
