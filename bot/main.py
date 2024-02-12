@@ -1,4 +1,5 @@
 import logging
+from aiogram.types import ReplyKeyboardRemove
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from keyboards.default import keyboard
@@ -27,8 +28,27 @@ async def startt(message: types.Message):
 
 @dp.message_handler(text='Katalog')
 async def katalog(message: types.Message):
+    await message.answer('Kataloglardan Birini tanlang', reply_markup=ReplyKeyboardRemove())
     await message.answer('KATALOG', reply_markup=Katalog1)
     await CallbackStates.chala.set()
+
+
+@dp.callback_query_handler(text='edit_orqa', state=CallbackStates.chala)
+async def orqaga_inline(call: types.CallbackQuery):
+    try:
+        await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                            reply_markup=Katalog1)
+    except:
+        await call.answer('Boshqa menyu mavjud emas')
+
+
+@dp.callback_query_handler(text='edit_oldin', state=CallbackStates.chala)
+async def oldinga_inline(call: types.CallbackQuery):
+    try:
+        await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                            reply_markup=Katalog2)
+    except:
+        await call.answer('Boshqa menyu mavjud emas')
 
 
 @dp.callback_query_handler(state=CallbackStates.chala)
@@ -44,6 +64,7 @@ async def kiyimlar_handler(call: types.CallbackQuery):
             kiyimlar = InlineKeyboardMarkup()
             for i in categorylar:
                 kiyimlar.add(InlineKeyboardButton(text="🛍" + i[0], callback_data=i[0]))
+            kiyimlar.add(InlineKeyboardButton(text='<<', callback_data="orqaga"))
             await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                                 reply_markup=kiyimlar)
             await CallbackStates.katalog.set()
@@ -51,22 +72,22 @@ async def kiyimlar_handler(call: types.CallbackQuery):
         await call.answer('Boshqa menyu mavjud emas')
 
 
-@dp.callback_query_handler(text='oldinga')
-async def oldinga_inline(call: types.CallbackQuery):
-    try:
-        await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                            reply_markup=Katalog2)
-    except:
-        await call.answer('Boshqa menyu mavjud emas')
-
-
-@dp.callback_query_handler(text='orqaga')
-async def orqaga_inline(call: types.CallbackQuery):
-    try:
-        await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                            reply_markup=Katalog1)
-    except:
-        await call.answer('Boshqa menyu mavjud emas')
+# @dp.callback_query_handler(text='oldinga')
+# async def oldinga_inline(call: types.CallbackQuery):
+#     try:
+#         await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
+#                                             reply_markup=Katalog2)
+#     except:
+#         await call.answer('Boshqa menyu mavjud emas')
+#
+#
+# @dp.callback_query_handler(text='orqaga')
+# async def orqaga_inline(call: types.CallbackQuery):
+#     try:
+#         await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
+#                                             reply_markup=Katalog1)
+#     except:
+#         await call.answer('Boshqa menyu mavjud emas')
 
 
 @dp.callback_query_handler(text='orqaga_katalog')
@@ -75,7 +96,13 @@ async def orqaga_kala(call: types.CallbackQuery):
     await call.message.answer('KATALOG', reply_markup=Katalog1)
 
 
-#
+@dp.callback_query_handler(text='orqaga', state=CallbackStates.katalog)
+async def mainer(call: types.CallbackQuery):
+    await call.message.delete()
+    await call.message.answer('KATALOG', reply_markup=Katalog1)
+    await CallbackStates.chala.set()
+
+
 @dp.callback_query_handler(state=CallbackStates.katalog)
 async def catalog_oladi(call: types.CallbackQuery):
     print('Katalog ishladi')
@@ -101,7 +128,15 @@ async def catalog_oladi(call: types.CallbackQuery):
         await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=call.data)
         await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                             reply_markup=button)
+        print(True)
         await CallbackStates.sub_catagory_state.set()
+
+
+@dp.callback_query_handler(text='orqaga_katalog', state=CallbackStates.sub_catagory_state)
+async def orqaga_katalog(call: types.CallbackQuery):
+    await call.message.delete()
+    await call.message.answer('KATALOG', reply_markup=Katalog1)
+    await CallbackStates.chala.set()
 
 
 @dp.callback_query_handler(state=CallbackStates.sub_catagory_state)
@@ -120,12 +155,19 @@ async def sub_category(call: types.CallbackQuery, state: FSMContext):
         inline_keyboard_mahsulotlar = InlineKeyboardMarkup()
         for i in mahsulotlar:
             inline_keyboard_mahsulotlar.add(InlineKeyboardButton(text="🛍" + i[0], callback_data=i[0]))
-        inline_keyboard_mahsulotlar.add(InlineKeyboardButton(text='<<', callback_data="orqaga_katalog"))
+        inline_keyboard_mahsulotlar.add(InlineKeyboardButton(text='<<', callback_data="orqaga_sub"))
         await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=call.data)
         await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                             reply_markup=inline_keyboard_mahsulotlar)
         await state.finish()
         await CallbackStates.product_state.set()
+
+
+@dp.callback_query_handler(state=CallbackStates.product_state, text="orqaga_sub")
+async def sub_orqaga(call: types.CallbackQuery):
+    await call.message.delete()
+    await call.message.answer('KATALOG', reply_markup=Katalog1)
+    await CallbackStates.chala.set()
 
 
 @dp.callback_query_handler(state=CallbackStates.product_state)
@@ -145,6 +187,7 @@ Mahsulot o`lchami : {a[0][8]}
 Mahsulot qoldiqi : {a[0][9]}
 Sotuvchi : {saler_name[0]}    
 Mahsulot kategoriyasi: {sub_category[0]}
+
 '''
     media_group = [
         InputMediaPhoto(media=open(f'C:/Users/momin/PycharmProjects/UZUM-MARKET/{a[0][2]}', 'rb')),
@@ -152,6 +195,14 @@ Mahsulot kategoriyasi: {sub_category[0]}
         InputMediaPhoto(media=open(f'C:/Users/momin/PycharmProjects/UZUM-MARKET/{a[0][4]}', 'rb'), caption=description)
     ]
     await call.message.answer_media_group(media=media_group)
+    button = InlineKeyboardMarkup(
+        inline_keyboard=[[
+            InlineKeyboardButton(text='Ha', callback_data='ha'),
+            InlineKeyboardButton(text='Yoq', callback_data='yoq'),
+        ]
+        ]
+    )
+    await call.message.answer("Sotib Olmoqchimisiz", reply_markup=button)
 
 
 if __name__ == '__main__':

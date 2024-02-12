@@ -1,6 +1,5 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-
 Katalog1 = InlineKeyboardMarkup(
     inline_keyboard=[
 
@@ -40,8 +39,8 @@ Katalog1 = InlineKeyboardMarkup(
         ],
 
         [
-            InlineKeyboardButton(text='◀️<<', callback_data="orqaga"),
-            InlineKeyboardButton(text='>>▶️', callback_data="oldinga"),
+            InlineKeyboardButton(text='◀️<<', callback_data="edit_orqa"),
+            InlineKeyboardButton(text='>>▶️', callback_data="edit_oldin"),
         ],
 
     ]
@@ -88,11 +87,9 @@ Katalog2 = InlineKeyboardMarkup(
             InlineKeyboardButton(text="🏡 Dacha, bog va tomorqa", callback_data="Dacha, bog va tomorqa")
         ],
         [
-            InlineKeyboardButton(text='◀️<<', callback_data="orqaga"),
-            InlineKeyboardButton(text='>>▶️', callback_data="oldinga"),
+            InlineKeyboardButton(text='◀️<<', callback_data="edit_orqa"),
+            InlineKeyboardButton(text='>>▶️', callback_data="edit_oldin"),
         ]
     ],
 
 )
-
-
