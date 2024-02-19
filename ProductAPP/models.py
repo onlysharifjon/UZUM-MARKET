@@ -45,7 +45,7 @@ class CategoryModel(models.Model):
 
 from SalerApp.models import SalerRegister
 
-
+#
 class ProductModel(models.Model):
     sub_category = models.ForeignKey(CategoryModel, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
