@@ -65,3 +65,11 @@ class ProductModel(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class KorzinkaModel(models.Model):
+    id_mahsulot = models.IntegerField()
+    user_id_telegram = models.BigIntegerField()
+
+    def __str__(self):
+        return self.user_id_telegram

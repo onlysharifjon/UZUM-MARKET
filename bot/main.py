@@ -178,15 +178,15 @@ async def product_aywdfiawd(call: types.CallbackQuery):
     sub_category = cursor.execute(
         f"SELECT sub_category FROM ProductAPP_categorymodel WHERE category_id = {a[0][-1]}").fetchone()
     description = f'''
-Mahsulot id: {a[0][0]}
-Mahsulot nomi: {a[0][1]}
-Mahsulot narxi: {a[0][5]}
-Mahsulot rangi: {a[0][6]}
-Mahsulot haqida : {a[0][7]}
-Mahsulot o`lchami : {a[0][8]}
-Mahsulot qoldiqi : {a[0][9]}
-Sotuvchi : {saler_name[0]}    
-Mahsulot kategoriyasi: {sub_category[0]}
+🆔Mahsulot id: {a[0][0]}
+✒️Mahsulot nomi: {a[0][1]}
+💸Mahsulot narxi: {a[0][5]}
+🔮Mahsulot rangi: {a[0][6]}
+📄Mahsulot haqida : {a[0][7]}
+📌Mahsulot o`lchami : {a[0][8]}
+🛒Mahsulot qoldiqi : {a[0][9]}
+👱‍♂️Sotuvchi : {saler_name[0]}    
+📎Mahsulot kategoriyasi: {sub_category[0]}
 
 '''
     media_group = [
@@ -203,6 +203,14 @@ Mahsulot kategoriyasi: {sub_category[0]}
         ]
     )
     await call.message.answer("Sotib Olmoqchimisiz", reply_markup=button)
+
+    @dp.callback_query_handler(text='ha')
+    async def rozi_boldi(call: types.CallbackQuery):
+        await call.message.answer(f'Korzinkaga {a[0][1]} qo`shildi!')
+
+
+
+
 
 
 if __name__ == '__main__':
