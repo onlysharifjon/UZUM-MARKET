@@ -11,7 +11,8 @@ from aiogram.dispatcher import FSMContext
 import sqlite3
 from aiogram.types import InputMedia
 
-connect = sqlite3.connect('C:/Users/momin/PycharmProjects/UZUM-MARKET/db.sqlite3', check_same_thread=False)
+connect = sqlite3.connect(
+    'C:/Users/Sharifjon/PycharmProjects/UZUM-MARKET/db.sqlite3', check_same_thread=False)
 cursor = connect.cursor()
 
 # ------------------------DATABASE--------------------
@@ -63,31 +64,15 @@ async def kiyimlar_handler(call: types.CallbackQuery):
         else:
             kiyimlar = InlineKeyboardMarkup()
             for i in categorylar:
-                kiyimlar.add(InlineKeyboardButton(text="🛍" + i[0], callback_data=i[0]))
-            kiyimlar.add(InlineKeyboardButton(text='<<', callback_data="orqaga"))
+                kiyimlar.add(InlineKeyboardButton(
+                    text="🛍" + i[0], callback_data=i[0]))
+            kiyimlar.add(InlineKeyboardButton(
+                text='<<', callback_data="orqaga"))
             await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                                 reply_markup=kiyimlar)
             await CallbackStates.katalog.set()
     except:
         await call.answer('Boshqa menyu mavjud emas')
-
-
-# @dp.callback_query_handler(text='oldinga')
-# async def oldinga_inline(call: types.CallbackQuery):
-#     try:
-#         await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
-#                                             reply_markup=Katalog2)
-#     except:
-#         await call.answer('Boshqa menyu mavjud emas')
-#
-#
-# @dp.callback_query_handler(text='orqaga')
-# async def orqaga_inline(call: types.CallbackQuery):
-#     try:
-#         await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
-#                                             reply_markup=Katalog1)
-#     except:
-#         await call.answer('Boshqa menyu mavjud emas')
 
 
 @dp.callback_query_handler(text='orqaga_katalog')
@@ -106,7 +91,8 @@ async def mainer(call: types.CallbackQuery):
 @dp.callback_query_handler(state=CallbackStates.katalog)
 async def catalog_oladi(call: types.CallbackQuery):
     print('Katalog ishladi')
-    filters = cursor.execute("SELECT id FROM ProductAPP_katalogmodel WHERE category = ?", (call.data,)).fetchall()
+    filters = cursor.execute(
+        "SELECT id FROM ProductAPP_katalogmodel WHERE category = ?", (call.data,)).fetchall()
     category_id = filters[0][0]
     filter_sub_category = cursor.execute('SELECT sub_category FROM ProductAPP_categorymodel WHERE category_id = ?',
                                          (category_id,)).fetchall()
@@ -123,7 +109,8 @@ async def catalog_oladi(call: types.CallbackQuery):
             buttons_list.append(i[0])
         for d in buttons_list:
             button.add(InlineKeyboardButton(text=d + "🛍", callback_data=d))
-        button.add(InlineKeyboardButton(text='<<', callback_data="orqaga_katalog"))
+        button.add(InlineKeyboardButton(
+            text='<<', callback_data="orqaga_katalog"))
         # await call.message.answer(f'{call.data}', reply_markup=button)
         await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=call.data)
         await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
@@ -154,8 +141,10 @@ async def sub_category(call: types.CallbackQuery, state: FSMContext):
     else:
         inline_keyboard_mahsulotlar = InlineKeyboardMarkup()
         for i in mahsulotlar:
-            inline_keyboard_mahsulotlar.add(InlineKeyboardButton(text="🛍" + i[0], callback_data=i[0]))
-        inline_keyboard_mahsulotlar.add(InlineKeyboardButton(text='<<', callback_data="orqaga_sub"))
+            inline_keyboard_mahsulotlar.add(
+                InlineKeyboardButton(text="🛍" + i[0], callback_data=i[0]))
+        inline_keyboard_mahsulotlar.add(InlineKeyboardButton(
+            text='<<', callback_data="orqaga_sub"))
         await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=call.data)
         await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                             reply_markup=inline_keyboard_mahsulotlar)
@@ -172,12 +161,16 @@ async def sub_orqaga(call: types.CallbackQuery):
 
 @dp.callback_query_handler(state=CallbackStates.product_state)
 async def product_aywdfiawd(call: types.CallbackQuery):
-    mahsulot_nomi = call.data
-    a = cursor.execute(f"SELECT * FROM ProductAPP_productmodel WHERE name=?", (mahsulot_nomi,)).fetchall()
-    saler_name = cursor.execute(f"SELECT name FROM SalerApp_salerregister WHERE id = {a[0][-2]}").fetchone()
-    sub_category = cursor.execute(
-        f"SELECT sub_category FROM ProductAPP_categorymodel WHERE category_id = {a[0][-1]}").fetchone()
-    description = f'''
+    if call.data != 'ha':
+        mahsulot_nomi = call.data
+        global a
+        a = cursor.execute(
+            f"SELECT * FROM ProductAPP_productmodel WHERE name=?", (mahsulot_nomi,)).fetchall()
+        saler_name = cursor.execute(
+            f"SELECT name FROM SalerApp_salerregister WHERE id = {a[0][-2]}").fetchone()
+        sub_category = cursor.execute(
+            f"SELECT sub_category FROM ProductAPP_categorymodel WHERE category_id = {a[0][-1]}").fetchone()
+        description = f'''
 🆔Mahsulot id: {a[0][0]}
 ✒️Mahsulot nomi: {a[0][1]}
 💸Mahsulot narxi: {a[0][5]}
@@ -187,30 +180,32 @@ async def product_aywdfiawd(call: types.CallbackQuery):
 🛒Mahsulot qoldiqi : {a[0][9]}
 👱‍♂️Sotuvchi : {saler_name[0]}    
 📎Mahsulot kategoriyasi: {sub_category[0]}
-
-'''
-    media_group = [
-        InputMediaPhoto(media=open(f'C:/Users/momin/PycharmProjects/UZUM-MARKET/{a[0][2]}', 'rb')),
-        InputMediaPhoto(media=open(f'C:/Users/momin/PycharmProjects/UZUM-MARKET/{a[0][3]}', 'rb')),
-        InputMediaPhoto(media=open(f'C:/Users/momin/PycharmProjects/UZUM-MARKET/{a[0][4]}', 'rb'), caption=description)
-    ]
-    await call.message.answer_media_group(media=media_group)
-    button = InlineKeyboardMarkup(
-        inline_keyboard=[[
-            InlineKeyboardButton(text='Ha', callback_data='ha'),
-            InlineKeyboardButton(text='Yoq', callback_data='yoq'),
+    '''
+        media_group = [
+            InputMediaPhoto(media=open(
+                f'C:/Users/Sharifjon/PycharmProjects/UZUM-MARKET/{a[0][2]}', 'rb')),
+            InputMediaPhoto(media=open(
+                f'C:/Users/Sharifjon/PycharmProjects/UZUM-MARKET/{a[0][3]}', 'rb')),
+            InputMediaPhoto(media=open(
+                f'C:/Users/Sharifjon/PycharmProjects/UZUM-MARKET/{a[0][4]}', 'rb'), caption=description)
         ]
-        ]
-    )
-    await call.message.answer("Sotib Olmoqchimisiz", reply_markup=button)
+        
+        
+        mahsulot_n = a[0][1]
+        await call.message.answer_media_group(media=media_group)
+        button = InlineKeyboardMarkup(
+            inline_keyboard=[[
+                InlineKeyboardButton(text='Ha', callback_data='ha'),
+                InlineKeyboardButton(text='Yoq', callback_data='yoq'),
+            ]
+            ]
+        )
+        await call.message.answer("Sotib Olmoqchimisiz", reply_markup=button)
 
-    @dp.callback_query_handler(text='ha')
-    async def rozi_boldi(call: types.CallbackQuery):
+    elif call.data == 'ha':
         await call.message.answer(f'Korzinkaga {a[0][1]} qo`shildi!')
 
-
-
-
+        
 
 
 if __name__ == '__main__':
