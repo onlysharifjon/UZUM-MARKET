@@ -214,7 +214,7 @@ async def product_aywdfiawd(call: types.CallbackQuery,state: FSMContext):
 
 
 
-
+#
 @dp.message_handler(text = 'Karzinka')
 async def kozrinla_logic(message:types.Message):
     await message.answer("Sizning Korzinkangiz buyumlari !")
