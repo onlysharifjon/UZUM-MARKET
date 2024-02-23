@@ -160,7 +160,7 @@ async def sub_orqaga(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(state=CallbackStates.product_state)
-async def product_aywdfiawd(call: types.CallbackQuery):
+async def product_aywdfiawd(call: types.CallbackQuery,state: FSMContext):
     if call.data != 'ha':
         mahsulot_nomi = call.data
         global a
@@ -203,7 +203,25 @@ async def product_aywdfiawd(call: types.CallbackQuery):
         await call.message.answer("Sotib Olmoqchimisiz", reply_markup=button)
 
     elif call.data == 'ha':
-        await call.message.answer(f'Korzinkaga {a[0][1]} qo`shildi!')
+        await call.message.delete()
+        cursor.execute('INSERT INTO ProductAPP_korzinkamodel(id_mahsulot,user_id_telegram,count,status) VALUES(?,?,?,?)',(a[0][0],call.message.chat.id,1,0))
+        connect.commit()
+        
+        
+        await call.message.answer(f'Korzinkaga {a[0][1]} qo`shildi!',reply_markup=keyboard)
+        await state.finish()
+
+
+
+
+
+@dp.message_handler(text = 'Karzinka')
+async def kozrinla_logic(message:types.Message):
+    await message.answer("Sizning Korzinkangiz buyumlari !")
+    cursor.execute("SELECT id_mahsulot FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?", (message.from_user.id, 0))
+    koriznkacha = cursor.fetchall()
+    await message.answer(koriznkacha)
+    # await message.answer(koriznkacha)
 
         
 
