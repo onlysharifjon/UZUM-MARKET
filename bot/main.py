@@ -160,7 +160,7 @@ async def sub_orqaga(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(state=CallbackStates.product_state)
-async def product_aywdfiawd(call: types.CallbackQuery,state: FSMContext):
+async def product_aywdfiawd(call: types.CallbackQuery, state: FSMContext):
     if call.data != 'ha':
         mahsulot_nomi = call.data
         global a
@@ -189,8 +189,7 @@ async def product_aywdfiawd(call: types.CallbackQuery,state: FSMContext):
             InputMediaPhoto(media=open(
                 f'C:/Users/Sharifjon/PycharmProjects/UZUM-MARKET/{a[0][4]}', 'rb'), caption=description)
         ]
-        
-        
+
         mahsulot_n = a[0][1]
         await call.message.answer_media_group(media=media_group)
         button = InlineKeyboardMarkup(
@@ -204,26 +203,42 @@ async def product_aywdfiawd(call: types.CallbackQuery,state: FSMContext):
 
     elif call.data == 'ha':
         await call.message.delete()
-        cursor.execute('INSERT INTO ProductAPP_korzinkamodel(id_mahsulot,user_id_telegram,count,status) VALUES(?,?,?,?)',(a[0][0],call.message.chat.id,1,0))
+        cursor.execute(
+            'INSERT INTO ProductAPP_korzinkamodel(id_mahsulot,user_id_telegram,count,status) VALUES(?,?,?,?)',
+            (a[0][0], call.message.chat.id, 1, 0))
         connect.commit()
-        
-        
-        await call.message.answer(f'Korzinkaga {a[0][1]} qo`shildi!',reply_markup=keyboard)
+
+        await call.message.answer(f'Korzinkaga {a[0][1]} qo`shildi!', reply_markup=keyboard)
         await state.finish()
 
 
-
-
 #
-@dp.message_handler(text = 'Karzinka')
-async def kozrinla_logic(message:types.Message):
+@dp.message_handler(text='Karzinka')
+async def kozrinla_logic(message: types.Message):
     await message.answer("Sizning Korzinkangiz buyumlari !")
-    cursor.execute("SELECT id_mahsulot FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?", (message.from_user.id, 0))
+    cursor.execute("SELECT id_mahsulot FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
+                   (message.from_user.id, 0))
     koriznkacha = cursor.fetchall()
-    await message.answer(koriznkacha)
-    # await message.answer(koriznkacha)
+    txt = ""
+    count = 0
+    umumiy_narx = 0
+    for i in koriznkacha:
+        count += 1
+        name = cursor.execute('SELECT name FROM ProductAPP_productmodel WHERE id=?', (int(i[0]),)).fetchone()
+        price = cursor.execute('SELECT price FROM ProductAPP_productmodel WHERE id=?', (int(i[0]),)).fetchone()
+        umumiy_narx += price[0]
+        txt += f"{count}) 📦<b>{name[0]}</b> {price[0]} So`m\n"
+    txt += f"\n🤑Jami: {umumiy_narx} So`m"
+    buyurmani_tasdiqlash = InlineKeyboardMarkup(row_width=1)
+    buyurmani_tasdiqlash.add(InlineKeyboardButton(text="✅", callback_data="tasdiqlash"))
+    buyurmani_tasdiqlash.add(InlineKeyboardButton(text="❌", callback_data="rad_qilish"))
 
-        
+    await message.answer(txt, parse_mode='HTML', reply_markup=buyurmani_tasdiqlash)
+
+
+@dp.callback_query_handler(text="tasdiqlash")
+async def tasdiqlash(call: types.CallbackQuery):
+    await call.message.answer('Uzum punktlaridan 2 kun ichida olib keting!')
 
 
 if __name__ == '__main__':
