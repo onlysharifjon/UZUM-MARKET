@@ -45,7 +45,7 @@ class CategoryModel(models.Model):
 
 from SalerApp.models import SalerRegister
 
-#
+
 class ProductModel(models.Model):
     sub_category = models.ForeignKey(CategoryModel, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -70,6 +70,7 @@ class ProductModel(models.Model):
 class KorzinkaModel(models.Model):
     id_mahsulot = models.IntegerField()
     user_id_telegram = models.BigIntegerField()
-
+    count = models.IntegerField()
+    status = models.BooleanField()
     def __str__(self):
         return self.user_id_telegram
