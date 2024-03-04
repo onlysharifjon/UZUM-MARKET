@@ -251,6 +251,7 @@ async def tasdiqlash(call: types.CallbackQuery):
         "SELECT id_mahsulot FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
         (call.message.chat.id, 0))
     koriznkacha = cursor.fetchall()
+
     for i in koriznkacha:
         cursor.execute("INSERT INTO ProductAPP_producthistorymodel(product_id,user_id_telegram) VALUES(?,?)",
                        (i[0], call.message.chat.id))
@@ -259,6 +260,19 @@ async def tasdiqlash(call: types.CallbackQuery):
                    (call.message.chat.id, 0))
     connect.commit()
     await call.message.answer('Uzum punktlaridan 2 kun ichida olib keting!')
+
+@dp.message_handler(text='Buyurtmalar tarixi!')
+async def history(message: types.Message):
+    history = cursor.execute(
+        "SELECT product_id FROM ProductAPP_producthistorymodel WHERE user_id_telegram=?", (message.from_user.id,)).fetchall()
+    txt = ""
+    cout = 0
+    for i in history:
+        cout+=1
+        name = cursor.execute('SELECT * FROM ProductAPP_productmodel WHERE id=?', (int(i[0]),)).fetchone()
+        print(name)
+        txt += f"{cout}) 📦<b>{name[1]}</b>   💵<code>{name[5]}</code>\n"
+    await message.answer(txt, parse_mode='HTML')
 
 
 if __name__ == '__main__':
