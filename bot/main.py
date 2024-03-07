@@ -11,7 +11,7 @@ from aiogram.dispatcher import FSMContext
 import sqlite3
 from aiogram.types import InputMedia
 
-connect = sqlite3.connect('db.sqlite3', check_same_thread=False)
+connect = sqlite3.connect('../db.sqlite3', check_same_thread=False)
 cursor = connect.cursor()
 from environs import Env
 
@@ -179,6 +179,7 @@ async def product_aywdfiawd(call: types.CallbackQuery, state: FSMContext):
             f"SELECT name FROM SalerApp_salerregister WHERE id = {a[0][-2]}").fetchone()
         sub_category = cursor.execute(
             f"SELECT sub_category FROM ProductAPP_categorymodel WHERE category_id = {a[0][-1]}").fetchone()
+        print(sub_category)
         description = f'''
 🆔Mahsulot id: {a[0][0]}
 ✒️Mahsulot nomi: {a[0][1]}
@@ -188,15 +189,15 @@ async def product_aywdfiawd(call: types.CallbackQuery, state: FSMContext):
 📌Mahsulot o`lchami : {a[0][8]}
 🛒Mahsulot qoldiqi : {a[0][9]}
 👱‍♂️Sotuvchi : {saler_name[0]}    
-📎Mahsulot kategoriyasi: {sub_category[0]}
+
     '''
         media_group = [
             InputMediaPhoto(media=open(
-                f'C:/Users/Sharifjon/PycharmProjects/UZUM-MARKET/{a[0][2]}', 'rb')),
+                f'../{a[0][2]}', 'rb')),
             InputMediaPhoto(media=open(
-                f'C:/Users/Sharifjon/PycharmProjects/UZUM-MARKET/{a[0][3]}', 'rb')),
+                f'../{a[0][3]}', 'rb')),
             InputMediaPhoto(media=open(
-                f'C:/Users/Sharifjon/PycharmProjects/UZUM-MARKET/{a[0][4]}', 'rb'), caption=description)
+                f'../{a[0][4]}', 'rb'), caption=description)
         ]
 
         mahsulot_n = a[0][1]
@@ -247,19 +248,21 @@ async def kozrinla_logic(message: types.Message):
 
 @dp.callback_query_handler(text="tasdiqlash")
 async def tasdiqlash(call: types.CallbackQuery):
-    koriznkacha = cursor.execute(
-        "SELECT id_mahsulot FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
-        (call.message.chat.id, 0))
-    koriznkacha = cursor.fetchall()
+    # koriznkacha = cursor.execute(
+    #     "SELECT id_mahsulot FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
+    #     (call.message.chat.id, 0))
+    # koriznkacha = cursor.fetchall()
+    #
+    # for i in koriznkacha:
+    #     cursor.execute("INSERT INTO ProductAPP_producthistorymodel(product_id,user_id_telegram) VALUES(?,?)",
+    #                    (i[0], call.message.chat.id))
+    #     connect.commit()
+    # cursor.execute("DELETE FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
+    #                (call.message.chat.id, 0))
+    # connect.commit()
+    # await call.message.answer('Uzum punktlaridan 2 kun ichida olib keting!')
 
-    for i in koriznkacha:
-        cursor.execute("INSERT INTO ProductAPP_producthistorymodel(product_id,user_id_telegram) VALUES(?,?)",
-                       (i[0], call.message.chat.id))
-        connect.commit()
-    cursor.execute("DELETE FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
-                   (call.message.chat.id, 0))
-    connect.commit()
-    await call.message.answer('Uzum punktlaridan 2 kun ichida olib keting!')
+
 
 @dp.message_handler(text='Buyurtmalar tarixi!')
 async def history(message: types.Message):
@@ -272,8 +275,15 @@ async def history(message: types.Message):
         name = cursor.execute('SELECT * FROM ProductAPP_productmodel WHERE id=?', (int(i[0]),)).fetchone()
         print(name)
         txt += f"{cout}) 📦<b>{name[1]}</b>   💵<code>{name[5]}</code>\n"
-    await message.answer(txt, parse_mode='HTML')
+    if txt is "":
+        await message.answer('Sizdahechqanday tarix mavjud emas')
+    else:
+        await message.answer(txt, parse_mode='HTML')
+@dp.message_handler(text='Bot Haqida!', state='*')
+async  def bot_haqida(message:types.Message):
+    text = "FAKE BOT"
 
+    await message.answer(text=text)
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
