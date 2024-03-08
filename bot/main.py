@@ -248,19 +248,19 @@ async def kozrinla_logic(message: types.Message):
 
 @dp.callback_query_handler(text="tasdiqlash")
 async def tasdiqlash(call: types.CallbackQuery):
-    # koriznkacha = cursor.execute(
-    #     "SELECT id_mahsulot FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
-    #     (call.message.chat.id, 0))
-    # koriznkacha = cursor.fetchall()
-    #
-    # for i in koriznkacha:
-    #     cursor.execute("INSERT INTO ProductAPP_producthistorymodel(product_id,user_id_telegram) VALUES(?,?)",
-    #                    (i[0], call.message.chat.id))
-    #     connect.commit()
-    # cursor.execute("DELETE FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
-    #                (call.message.chat.id, 0))
-    # connect.commit()
-    # await call.message.answer('Uzum punktlaridan 2 kun ichida olib keting!')
+    koriznkacha = cursor.execute(
+        "SELECT id_mahsulot FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
+        (call.message.chat.id, 0))
+    koriznkacha = cursor.fetchall()
+
+    for i in koriznkacha:
+        cursor.execute("INSERT INTO ProductAPP_producthistorymodel(product_id,user_id_telegram) VALUES(?,?)",
+                       (i[0], call.message.chat.id))
+        connect.commit()
+    cursor.execute("DELETE FROM ProductAPP_korzinkamodel WHERE user_id_telegram=? AND status=?",
+                   (call.message.chat.id, 0))
+    connect.commit()
+    await call.message.answer('Uzum punktlaridan 2 kun ichida olib keting!')
 
 
 
