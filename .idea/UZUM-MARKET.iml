@@ -18,7 +18,7 @@
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv_begi" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (UZUM-MARKET) (3)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

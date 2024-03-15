@@ -20,11 +20,13 @@ env = Env()
 env.read_env()
 
 # .env fayl ichidan quyidagilarni o'qiymiz
-API_TOKEN = env.str("API_TOKEN")  # Bot toekn
+API_TOKEN = env.str('API_TOKEN')  # Bot token
 ADMINS = env.list("ADMINS")  # adminlar ro'yxati
 IP = env.str("ip")  # Xosting ip manzili
 
 # ------------------------DATABASE--------------------
+
+# API_TOKEN = "6586939529:AAF8J4lGLyO0LSCmpKHnBj14OkuvwgD76jc"
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN, parse_mode='HTML')
@@ -263,15 +265,15 @@ async def tasdiqlash(call: types.CallbackQuery):
     await call.message.answer('Uzum punktlaridan 2 kun ichida olib keting!')
 
 
-
 @dp.message_handler(text='Buyurtmalar tarixi!')
 async def history(message: types.Message):
     history = cursor.execute(
-        "SELECT product_id FROM ProductAPP_producthistorymodel WHERE user_id_telegram=?", (message.from_user.id,)).fetchall()
+        "SELECT product_id FROM ProductAPP_producthistorymodel WHERE user_id_telegram=?",
+        (message.from_user.id,)).fetchall()
     txt = ""
     cout = 0
     for i in history:
-        cout+=1
+        cout += 1
         name = cursor.execute('SELECT * FROM ProductAPP_productmodel WHERE id=?', (int(i[0]),)).fetchone()
         print(name)
         txt += f"{cout}) 📦<b>{name[1]}</b>   💵<code>{name[5]}</code>\n"
@@ -279,11 +281,12 @@ async def history(message: types.Message):
         await message.answer('Sizdahechqanday tarix mavjud emas')
     else:
         await message.answer(txt, parse_mode='HTML')
-@dp.message_handler(text='Bot Haqida!', state='*')
-async  def bot_haqida(message:types.Message):
-    text = "FAKE BOT"
 
-    await message.answer(text=text)
+
+@dp.message_handler(text='Bot Haqida!', state='*')
+async def bot_haqida(message: types.Message):
+    await message.answer(f"""<b>It's UZUM MARKET FAKE bot !!! </b>""", parse_mode='HTML')
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
